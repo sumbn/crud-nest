@@ -1,12 +1,27 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
+import {
+  Body,
+  ClassSerializerInterceptor,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseIntPipe,
+  Post,
+  Put,
+  Query,
+  UseInterceptors,
+} from '@nestjs/common';
 import { UserService } from './user.service';
+import { CreateUserDto } from './dtos/createUser.dto';
+import { UpdateUserDto } from './dtos/updateUser.dto';
 
 @Controller('users')
+@UseInterceptors(ClassSerializerInterceptor)
 export class UserController {
   constructor(private userService: UserService) {}
 
   @Post()
-  createUser(@Body() reqBody: any) {
+  createUser(@Body() reqBody: CreateUserDto) {
     return this.userService.create(reqBody);
   }
 
@@ -16,17 +31,17 @@ export class UserController {
   }
 
   @Get()
-  getUser(@Param('id') id: number) {
+  getUser(@Param('id', ParseIntPipe) id: number) {
     return this.userService.findById(id);
   }
 
   @Put('/:id')
-  updateUser(@Query('id') id: number, @Body() requestBody: any) {
+  updateUser(@Query('id', ParseIntPipe) id: number, @Body() requestBody: UpdateUserDto) {
     return this.userService.updateById(id, requestBody);
   }
 
   @Delete('/:id')
-  deleteByID(@Query('id') id: number) {
+  deleteByID(@Query('id', ParseIntPipe) id: number) {
     return this.userService.deleteById(id);
   }
 }
