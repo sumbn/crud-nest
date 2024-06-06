@@ -9,6 +9,7 @@ import {
   Post,
   Put,
   Query,
+  Request,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
@@ -31,6 +32,12 @@ export class UserController {
   @UseGuards(AuthGuard)
   getAllUsers() {
     return this.userService.findAll();
+  }
+
+  @Get('/current-user')
+  @UseGuards(AuthGuard)
+  getCurrentUser(@Request() req) {
+    return this.authService.getCurrentUser(req);
   }
 
   @Get()

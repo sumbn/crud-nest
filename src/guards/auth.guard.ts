@@ -17,7 +17,6 @@ export class AuthGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
-
     // get token
 
     const token = request.headers.authorization.split(' ')[1];
@@ -36,7 +35,6 @@ export class AuthGuard implements CanActivate {
       //find user in db
 
       const user = await this.userService.findByEmail(payload.email);
-      console.log(user);
 
       if (!user) {
         throw new BadRequestException('user not belong to token');
@@ -44,7 +42,7 @@ export class AuthGuard implements CanActivate {
 
       //assign user to request obj
 
-      request.user = user;
+      request.currentUser = user;
     } catch {
       throw new UnauthorizedException();
     }
