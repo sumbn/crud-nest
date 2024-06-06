@@ -9,23 +9,26 @@ import {
   Post,
   Put,
   Query,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { UserService } from './user.service';
-import { CreateUserDto } from './dtos/createUser.dto';
 import { UpdateUserDto } from './dtos/updateUser.dto';
+import { RegisterUserDto } from './dtos/registerUser.dto';
+import { AuthService } from './auth.service';
+import { UserService } from './user.service';
+import { LoginUserDto } from './dtos/loginUser.dto';
+import { AuthGuard } from 'src/guards/auth.guard';
 
-@Controller('users')
+@Controller('/api/v1/users')
 @UseInterceptors(ClassSerializerInterceptor)
 export class UserController {
-  constructor(private userService: UserService) {}
-
-  @Post()
-  createUser(@Body() reqBody: CreateUserDto) {
-    return this.userService.create(reqBody);
-  }
+  constructor(
+    private userService: UserService,
+    private authService: AuthService,
+  ) {}
 
   @Get()
+  @UseGuards(AuthGuard)
   getAllUsers() {
     return this.userService.findAll();
   }
@@ -43,5 +46,15 @@ export class UserController {
   @Delete('/:id')
   deleteByID(@Query('id', ParseIntPipe) id: number) {
     return this.userService.deleteById(id);
+  }
+
+  @Post('/register')
+  registerUser(@Body() requestBody: RegisterUserDto) {
+    return this.authService.register(requestBody);
+  }
+
+  @Post('/login')
+  loginUser(@Body() requestBody: LoginUserDto) {
+    return this.authService.login(requestBody);
   }
 }
