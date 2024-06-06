@@ -20,6 +20,7 @@ import { LoginUserDto } from './dtos/loginUser.dto';
 import { AuthGuard } from '../guards/auth.guard';
 import { CurrentUser } from './decorators/currentUser.decorator';
 import { UserEntity } from './user.entity';
+import { RoleGuard } from '../guards/role.guard';
 
 @Controller('/api/v1/users')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -30,6 +31,7 @@ export class UserController {
   ) {}
 
   @Get()
+  @UseGuards(new RoleGuard(['admin', 'user', 'mod']))
   @UseGuards(AuthGuard)
   getAllUsers() {
     return this.userService.findAll();
@@ -47,13 +49,23 @@ export class UserController {
   }
 
   @Put('/:id')
-  updateUser(@Query('id', ParseIntPipe) id: number, @Body() requestBody: UpdateUserDto) {
-    return this.userService.updateById(id, requestBody);
+  @UseGuards(new RoleGuard(['admin', 'user', 'mod']))
+  @UseGuards(AuthGuard)
+  updateUser(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() requestBody: UpdateUserDto,
+    @CurrentUser() currentUser: UserEntity,
+  ) {
+    console.log('first', id);
+    return this.userService.updateById(id, requestBody, currentUser);
+    // return 'test';
   }
 
   @Delete('/:id')
-  deleteByID(@Query('id', ParseIntPipe) id: number) {
-    return this.userService.deleteById(id);
+  @UseGuards(new RoleGuard(['admin', 'user', 'mod']))
+  @UseGuards(AuthGuard)
+  deleteByID(@Query('id', ParseIntPipe) id: number, @CurrentUser() currentUser: UserEntity) {
+    return this.userService.deleteById(id, currentUser);
   }
 
   @Post('/register')
