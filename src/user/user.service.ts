@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { RegisterUserDto } from './dtos/registerUser.dto';
 import { Permission } from '../helpers/checkPermission.helper';
 import { UpdateUserDto } from './dtos/updateUser.dto';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
@@ -43,6 +44,11 @@ export class UserService {
     Permission.check(id, currentUser);
 
     user = { ...user, ...requestBody };
+
+    //hash pw
+    const hashedPassword = await bcrypt.hash(requestBody.password, 10);
+
+    requestBody.password = hashedPassword;
 
     const updateUser = await this.userRepo.save(user);
     return {
