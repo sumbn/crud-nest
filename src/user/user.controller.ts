@@ -17,7 +17,7 @@ import { RegisterUserDto } from './dtos/registerUser.dto';
 import { AuthService } from './auth.service';
 import { UserService } from './user.service';
 import { LoginUserDto } from './dtos/loginUser.dto';
-import { AuthGuard } from 'src/guards/auth.guard';
+import { AuthGuard } from '../guards/auth.guard';
 
 @Controller('/api/v1/users')
 @UseInterceptors(ClassSerializerInterceptor)
