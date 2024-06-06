@@ -9,7 +9,6 @@ import {
   Post,
   Put,
   Query,
-  Request,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
@@ -19,6 +18,8 @@ import { AuthService } from './auth.service';
 import { UserService } from './user.service';
 import { LoginUserDto } from './dtos/loginUser.dto';
 import { AuthGuard } from '../guards/auth.guard';
+import { CurrentUser } from './decorators/currentUser.decorator';
+import { UserEntity } from './user.entity';
 
 @Controller('/api/v1/users')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -36,8 +37,8 @@ export class UserController {
 
   @Get('/current-user')
   @UseGuards(AuthGuard)
-  getCurrentUser(@Request() req) {
-    return this.authService.getCurrentUser(req);
+  getCurrentUser(@CurrentUser() currentUser: UserEntity) {
+    return currentUser;
   }
 
   @Get()
