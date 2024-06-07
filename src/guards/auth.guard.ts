@@ -20,7 +20,7 @@ export class AuthGuard implements CanActivate {
     // get token
 
     const token = request.headers.authorization.split(' ')[1];
-    console.log(token);
+    // console.log(token);
 
     // jwt valid token
 
