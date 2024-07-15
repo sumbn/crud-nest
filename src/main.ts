@@ -7,7 +7,7 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
   // app.enableCors();
   app.enableCors({
-    origin: process.env.FRONTEND_URL, // Add your frontend URL here
+    origin: ['http://localhost:3000'], // Add your frontend URL here
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
     allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization'],
   });
