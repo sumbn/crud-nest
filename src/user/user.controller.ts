@@ -70,6 +70,7 @@ export class UserController {
 
   @Post('/register')
   registerUser(@Body() requestBody: RegisterUserDto) {
+    console.log(requestBody);
     return this.authService.register(requestBody);
   }
 
