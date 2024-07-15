@@ -2,14 +2,18 @@
   "version": 2,
   "builds": [
     {
-      "src": "dist/main.js",
+      "src": "package.json",
+      "use": "vercel-sapper"
+    },
+    {
+      "src": "index.js",
       "use": "@vercel/node"
     }
   ],
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "dist/main.js",
+      "dest": "index.js",
       "methods": ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
       "headers": {
         "Access-Control-Allow-Origin": "*"
